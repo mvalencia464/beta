@@ -2,7 +2,6 @@ import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
-  // Use 'static' for best speed; 'server' for dynamic apps
   output: 'static',
   image: {
     // Use 'compile' for build-time optimization (AVIF + WebP)
@@ -15,15 +14,20 @@ export default defineConfig({
     domains: ['images.stokeleads.com'],
   },
   adapter: cloudflare({
-    // 'compile' is perfect for home services: it optimizes your
-    // project photos at build time so they load instantly.
     imageService: 'compile',
-    // Rename assets binding to avoid 'ASSETS' reserved name conflict
+    // Hard override to prevent the reserved 'ASSETS' name clash
     assets: {
-      binding: 'PROJECT_ASSETS'
+      binding: 'LOCAL_ASSETS_BINDING'
     },
+    // Ensure the proxy doesn't try to auto-inject the default binding
     platformProxy: {
-      enabled: true, // Enables the new Astro 6 workerd dev server
+      enabled: true,
     }
   }),
+  // Vite needs to know to ignore the 'ASSETS' keyword during the build
+  vite: {
+    define: {
+      'process.env.ASSETS_BINDING_NAME': JSON.stringify('LOCAL_ASSETS_BINDING')
+    }
+  }
 });
