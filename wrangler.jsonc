@@ -1,6 +1,18 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "your-project-name",
+  "name": "deck-masters",
+  "type": "javascript",
+  "main": "dist/server/entry.mjs",
   "compatibility_date": "2026-02-27",
-  "compatibility_flags": ["nodejs_compat"]
+  "compatibility_flags": ["nodejs_compat"],
+  "env": {
+    "production": {
+      "routes": [
+        {
+          "pattern": "deck-masters.com/*",
+          "zone_name": "deck-masters.com"
+        }
+      ]
+    }
+  }
 }
