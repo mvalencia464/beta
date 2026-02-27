@@ -1,0 +1,213 @@
+---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import eagleRiver from '../assets/decks/eagle-river-sanctuary.webp';
+import glenAlps from '../assets/decks/glen-alps-entertainer.webp';
+import hillside from '../assets/decks/hillside-mountain-view.webp';
+import midtown from '../assets/decks/midtown-modern.webp';
+import southAnchorage from '../assets/decks/south-anchorage-retreat.webp';
+import turnagain from '../assets/decks/turnagain-coastal.webp';
+
+// Get deck projects
+const deckCollection = await getCollection('decks');
+
+// Filter to only decks.json entries (skip reviews)
+const decks = deckCollection.filter(item => item.id && item.data.image);
+
+// Map image filenames to imported modules
+const imageMap: Record<string, any> = {
+  'eagle-river-sanctuary.webp': eagleRiver,
+  'glen-alps-entertainer.webp': glenAlps,
+  'hillside-mountain-view.webp': hillside,
+  'midtown-modern.webp': midtown,
+  'south-anchorage-retreat.webp': southAnchorage,
+  'turnagain-coastal.webp': turnagain,
+};
+---
+
+<section class="gallery-section">
+  <div class="container">
+    <div class="gallery-header">
+      <h2 class="gallery-title">Our Deck Gallery</h2>
+      <p class="gallery-subtitle">
+        Browse our portfolio of completed projects across Anchorage and beyond
+      </p>
+    </div>
+
+    <div class="gallery-grid">
+      {
+        decks.map((deck) => {
+          const imageModule = imageMap[deck.data.image];
+
+          return (
+            <div class="gallery-item">
+              <div class="gallery-image-wrapper">
+                {imageModule ? (
+                  <Image
+                    src={imageModule}
+                    alt={deck.data.title}
+                    class="gallery-image"
+                  />
+                ) : (
+                  <div class="gallery-image-placeholder">
+                    {deck.data.title}
+                  </div>
+                )}
+              </div>
+              <div class="gallery-overlay">
+                <h3 class="gallery-item-title">{deck.data.title}</h3>
+                <p class="gallery-item-description">
+                  {deck.data.description}
+                </p>
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .gallery-section {
+    padding: 80px 20px;
+    background: #f9fafb;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .gallery-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .gallery-title {
+    margin: 0 0 12px 0;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .gallery-subtitle {
+    margin: 0;
+    font-size: 16px;
+    color: #6b7280;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    aspect-ratio: 1;
+    cursor: pointer;
+    group: "gallery-item";
+  }
+
+  .gallery-image-wrapper {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .gallery-item:hover .gallery-image {
+    transform: scale(1.05);
+  }
+
+  .gallery-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    font-weight: 600;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0) 30%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    color: white;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-item-title {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .gallery-item-description {
+    margin: 0;
+    font-size: 14px;
+    color: #e5e7eb;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .gallery-section {
+      padding: 60px 16px;
+    }
+
+    .gallery-title {
+      font-size: 24px;
+    }
+
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .gallery-section {
+      padding: 40px 12px;
+    }
+
+    .gallery-title {
+      font-size: 20px;
+    }
+
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

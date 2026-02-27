@@ -1,0 +1,117 @@
+---
+import { getCollection } from 'astro:content';
+import TestimonialCard from './TestimonialCard.astro';
+
+const reviews = await getCollection('reviews');
+
+// Shuffle for varied masonry effect (optional - remove if you want chronological)
+const shuffledReviews = reviews.sort(() => Math.random() - 0.5);
+---
+
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="section-title">Client Testimonials</h2>
+    <p class="section-subtitle">
+      What our customers have to say about their projects
+    </p>
+
+    <div class="masonry-grid">
+      {
+        shuffledReviews.map((review) => (
+          <TestimonialCard
+            author={review.data.author}
+            rating={review.data.rating}
+            text={review.data.text}
+            date={review.data.date}
+            avatarUrl={review.data.avatarUrl}
+            source={review.data.source}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .testimonials-section {
+    padding: 80px 20px;
+    background: #f9fafb;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    margin: 0 0 12px 0;
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    text-align: center;
+  }
+
+  .section-subtitle {
+    margin: 0 0 48px 0;
+    font-size: 16px;
+    color: #6b7280;
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .masonry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 32px;
+    grid-auto-rows: auto;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .masonry-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .testimonials-section {
+      padding: 60px 16px;
+    }
+
+    .section-title {
+      font-size: 24px;
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      margin-bottom: 36px;
+    }
+
+    .masonry-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .testimonials-section {
+      padding: 40px 12px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      margin-bottom: 24px;
+    }
+
+    .masonry-grid {
+      gap: 16px;
+    }
+  }
+</style>

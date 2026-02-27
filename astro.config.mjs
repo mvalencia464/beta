@@ -1,5 +1,25 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
+import cloudflare from '@astrojs/cloudflare';
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  // Use 'static' for best speed; 'server' for dynamic apps
+  output: 'static',
+  image: {
+    // Use 'compile' for build-time optimization (AVIF + WebP)
+    service: {
+      entrypoint: '@astrojs/image/services/sharp',
+      config: {
+        limitInputPixels: false,
+      },
+    },
+    domains: ['images.stokeleads.com'],
+  },
+  adapter: cloudflare({
+    // 'compile' is perfect for home services: it optimizes your
+    // project photos at build time so they load instantly.
+    imageService: 'compile',
+    platformProxy: {
+      enabled: true, // Enables the new Astro 6 workerd dev server
+    }
+  }),
+});
