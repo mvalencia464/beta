@@ -18,6 +18,10 @@ export default defineConfig({
     // 'compile' is perfect for home services: it optimizes your
     // project photos at build time so they load instantly.
     imageService: 'compile',
+    // Rename assets binding to avoid 'ASSETS' reserved name conflict
+    assets: {
+      binding: 'PROJECT_ASSETS'
+    },
     platformProxy: {
       enabled: true, // Enables the new Astro 6 workerd dev server
     }
