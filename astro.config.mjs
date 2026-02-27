@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
-  output: 'static',
+  output: 'server',
   image: {
     // Use 'compile' for build-time optimization (AVIF + WebP)
     service: {
@@ -17,7 +17,7 @@ export default defineConfig({
     imageService: 'compile',
     // Hard override to prevent the reserved 'ASSETS' name clash
     assets: {
-      binding: 'LOCAL_ASSETS_BINDING'
+      binding: 'PROJECT_ASSETS'
     },
     // Ensure the proxy doesn't try to auto-inject the default binding
     platformProxy: {
@@ -27,7 +27,7 @@ export default defineConfig({
   // Vite needs to know to ignore the 'ASSETS' keyword during the build
   vite: {
     define: {
-      'process.env.ASSETS_BINDING_NAME': JSON.stringify('LOCAL_ASSETS_BINDING')
+      'process.env.ASSETS_BINDING_NAME': JSON.stringify('PROJECT_ASSETS')
     }
   }
 });
