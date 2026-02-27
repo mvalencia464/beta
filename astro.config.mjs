@@ -2,32 +2,15 @@ import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
-  output: 'server',
-  image: {
-    // Use 'compile' for build-time optimization (AVIF + WebP)
-    service: {
-      entrypoint: '@astrojs/image/services/sharp',
-      config: {
-        limitInputPixels: false,
-      },
-    },
-    domains: ['images.stokeleads.com'],
-  },
+  // 'server' is required for Workers to persist the build config
+  output: 'server', 
   adapter: cloudflare({
-    imageService: 'compile',
-    // Hard override to prevent the reserved 'ASSETS' name clash
+    imageService: 'compile', // Optimizes your 80 deck photos for free
     assets: {
-      binding: 'PROJECT_ASSETS'
+      binding: 'PROJECT_ASSETS' // Solves the "Reserved Name" error
     },
-    // Ensure the proxy doesn't try to auto-inject the default binding
     platformProxy: {
-      enabled: true,
+      enabled: true, // Crucial for the Astro 6 dev server
     }
   }),
-  // Vite needs to know to ignore the 'ASSETS' keyword during the build
-  vite: {
-    define: {
-      'process.env.ASSETS_BINDING_NAME': JSON.stringify('PROJECT_ASSETS')
-    }
-  }
 });
