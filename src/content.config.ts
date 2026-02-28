@@ -10,6 +10,7 @@ const reviews = defineCollection({
     date: z.coerce.date(),
     avatarUrl: z.string().trim().toLowerCase().url().or(z.literal('')).transform(val => val === '' ? undefined : val).optional(),
     source: z.string().default('Google'),
+    videoUrl: z.string().optional(),
   }),
 });
 

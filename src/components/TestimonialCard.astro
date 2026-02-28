@@ -6,9 +6,10 @@ interface Props {
   date: string;
   avatarUrl?: string;
   source: string;
+  videoUrl?: string;
 }
 
-const { author, rating, text, date, avatarUrl, source } = Astro.props;
+const { author, rating, text, date, avatarUrl, source, videoUrl } = Astro.props;
 
 // Format date as "Month Year"
 const reviewDate = new Date(date);
@@ -24,6 +25,15 @@ const initials = author
 ---
 
 <div class="testimonial-card">
+  {videoUrl ? (
+    <div class="video-container">
+      <video controls width="100%" height="auto" class="testimonial-video">
+        <source src={videoUrl} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  ) : null}
+
   <div class="card-header">
     <div class="avatar-section">
       {
@@ -66,6 +76,19 @@ const initials = author
 
   .testimonial-card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .video-container {
+    margin: -20px -20px 16px -20px;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .testimonial-video {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .card-header {

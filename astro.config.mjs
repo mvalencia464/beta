@@ -3,6 +3,10 @@ import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
   output: 'server',
+  image: {
+    formats: ['avif', 'webp'],
+    domains: ['images.stokeleads.com'],
+  },
   adapter: cloudflare({
     imageService: 'compile',
     assets: {
